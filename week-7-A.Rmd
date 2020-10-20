@@ -40,6 +40,17 @@ q_resamples <- qscores %>%
 
 **Prompt:** Add two more columns to `q_resamples`: `hours_sampled` (the vector of hours pulled from each row of `boot`) and `mean_hours` (the mean of each `hours_sampled`). 
 
+```{r scene 2}
+
+q_resamples <- qscores %>%
+  select(hours) %>% 
+  bootstraps(times = 1000) %>% 
+  mutate(boot = map(splits, ~ analysis(.))) %>%
+  mutate(hours_sampled = map(boot, ~ pull(., hours))) %>%
+  mutate(mean_hours = map_dbl(hours_sampled, ~ mean(.)))
+  
+
+```
 
 
 
@@ -47,6 +58,16 @@ q_resamples <- qscores %>%
 
 **Prompt:** Create a graphic of the posterior probability distribution for H. Interpret it.
 
+```{r scene 3}
+
+q_resamples %>% 
+  ggplot() +
+  geom_histogram(aes(x = mean_hours, 
+                     y = after_stat(count/sum(count))), 
+                 binwidth = 0.02, 
+                 color = "white")
+
+```
 
 
 
