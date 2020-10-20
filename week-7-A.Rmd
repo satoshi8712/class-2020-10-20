@@ -25,6 +25,15 @@ Define the parameter H as the average number of hours of work reported by studen
 
 **Prompt:** Create a tibble called `q_resamples` with three columns: `splits`, `id` and `boot`.  The first two columns are created automatically when you use `rsample::bootstraps()`. The last variable is a list column which includes a tibble with resampled data from `qscores`. There only column you need to keep from `qscores` is `hours`. Refer to Chapter 7 in the *The Primer* for hints.
 
+```{r scene1}
+
+q_resamples <- qscores %>%
+  select(hours) %>% 
+  bootstraps(times = 3) %>% 
+  mutate(boot = map(splits, ~ analysis(.))) 
+  
+
+```
 
 
 ## Scene 2
